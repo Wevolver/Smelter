@@ -12,6 +12,7 @@ import random
 import os
 import os.path
 import sys
+import StringIO
 
 from OCC.STEPControl import STEPControl_Reader
 from OCC.IFSelect import IFSelect_RetDone, IFSelect_ItemsByEntity
@@ -41,12 +42,12 @@ def read_step_file(filename):
     return aResShape
 
 def import_as_one_shape(event=None):
-    shp = read_step_file(os.path.join('.', 'example1.stp'))
+    shp = read_step_file(os.path.join('.', 'LampExample.step'))
     tess = Tesselator(shp)
     tess.Compute()
     threejsString = tess.ExportShapeToThreejsJSONString('someid')
-    with open("outputs/threejs/shape.json", "w") as f: 
-        f.write(threejsString)
+    # with open("outputs/threejs/shape.json", "w") as f: 
+    #    f.write(threejsString)
     return threejsString
 
 def import_as_compound(event=None):
@@ -65,8 +66,13 @@ CORS(app)
 
 class step(Resource):
     def get(self):
-	jsonStr = json.loads( import_as_one_shape())
-   	return jsonify(jsonStr)
+	strIO = StringIO.StringIO()
+	jsonStr = import_as_one_shape()
+   	strIO.write(jsonStr)
+	strIO.seek(0)
+	return send_file(strIO,
+                     attachment_filename="testing.json",
+                     as_attachment=True)
 
 def serve_image(img):
     img_io = StringIO()
