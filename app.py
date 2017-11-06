@@ -1,23 +1,72 @@
+from __future__ import print_function
 from flask_restful import Resource
 from flask_restful import Api
 from flask import send_file
 from flask import request
 from flask import Flask
 from json import dumps
+from flask import jsonify
+from flask_cors import CORS
+import json 
+import random
+import os
+import os.path
+import sys
 
-brd = '/root/code/Smelter/photon.brd'
+from OCC.STEPControl import STEPControl_Reader
+from OCC.IFSelect import IFSelect_RetDone, IFSelect_ItemsByEntity
+from OCC.Quantity import Quantity_Color, Quantity_TOC_RGB
+from OCC.Display.WebGl import threejs_renderer
+from OCC.Visualization import Tesselator
+
+step = '/root/code/Smelter/example1.stp'
+
+def read_step_file(filename):
+    """ read the STEP file and returns a compound
+    """
+    step_reader = STEPControl_Reader()
+    status = step_reader.ReadFile(filename)
+
+    if status == IFSelect_RetDone:  # check status
+        failsonly = False
+        step_reader.PrintCheckLoad(failsonly, IFSelect_ItemsByEntity)
+        step_reader.PrintCheckTransfer(failsonly, IFSelect_ItemsByEntity)
+
+        ok = step_reader.TransferRoot(1)
+        _nbs = step_reader.NbShapes()
+        aResShape = step_reader.Shape(1)
+    else:
+        print("Error: can't read file.")
+        sys.exit(0)
+    return aResShape
+
+def import_as_one_shape(event=None):
+    shp = read_step_file(os.path.join('.', 'example1.stp'))
+    tess = Tesselator(shp)
+    tess.Compute()
+    threejsString = tess.ExportShapeToThreejsJSONString('someid')
+    with open("outputs/threejs/shape.json", "w") as f: 
+        f.write(threejsString)
+    return threejsString
+
+def import_as_compound(event=None):
+    compound = read_step_file(os.path.join('.', 'models', 'as1_pe_203.stp'))
+    t = Topo(compound)
+    display.EraseAll()
+    for solid in t.solids():
+        color = Quantity_Color(random.random(),
+                               random.random(),
+                               random.random(),
+                               Quantity_TOC_RGB)
 
 app = Flask(__name__)
 api = Api(app)
+CORS(app)
 
-class stl(Resource):
+class step(Resource):
     def get(self):
-        return {'stl': 'None'}
-
-class eagle(Resource):
-    def get(self):
-        image = image3d.export_image3d(brd, 'api_3d.png')
-        return serve_image(image)
+	jsonStr = json.loads( import_as_one_shape())
+   	return jsonify(jsonStr)
 
 def serve_image(img):
     img_io = StringIO()
@@ -25,8 +74,8 @@ def serve_image(img):
     img_io.seek(0)
     return send_file(img_io, mimetype='image/png')
 
-api.add_resource(stl, '/smelt/stl')
-api.add_resource(eagle, '/smelt/eagle')
+api.add_resource(step, '/smelt/step')
+
 
 if __name__ == '__main__':
      app.run()
