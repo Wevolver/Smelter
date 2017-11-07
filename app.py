@@ -12,7 +12,7 @@ import random
 import os
 import os.path
 import sys
-import StringIO
+from io import StringIO
 
 from OCC.STEPControl import STEPControl_Reader
 from OCC.IFSelect import IFSelect_RetDone, IFSelect_ItemsByEntity
@@ -66,13 +66,11 @@ CORS(app)
 
 class step(Resource):
     def get(self):
-	strIO = StringIO.StringIO()
-	jsonStr = import_as_one_shape()
-   	strIO.write(jsonStr)
-	strIO.seek(0)
-	return send_file(strIO,
-                     attachment_filename="testing.json",
-                     as_attachment=True)
+        strIO = StringIO()
+        jsonStr = import_as_one_shape()
+        strIO.write(jsonStr)
+        strIO.seek(0)
+        return send_file(strIO, attachment_filename="testing.json", as_attachment=True)
 
 def serve_image(img):
     img_io = StringIO()
