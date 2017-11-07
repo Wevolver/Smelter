@@ -12,7 +12,7 @@ import random
 import os
 import os.path
 import sys
-from io import StringIO
+from io import BytesIO
 
 from OCC.STEPControl import STEPControl_Reader
 from OCC.IFSelect import IFSelect_RetDone, IFSelect_ItemsByEntity
@@ -20,7 +20,6 @@ from OCC.Quantity import Quantity_Color, Quantity_TOC_RGB
 from OCC.Display.WebGl import threejs_renderer
 from OCC.Visualization import Tesselator
 
-step = '/root/code/Smelter/example1.stp'
 
 def read_step_file(filename):
     """ read the STEP file and returns a compound
@@ -66,18 +65,17 @@ CORS(app)
 
 class step(Resource):
     def get(self):
-        strIO = StringIO()
+        strIO = BytesIO()
         jsonStr = import_as_one_shape()
-        strIO.write(jsonStr)
+        strIO.write(jsonStr.encode())
         strIO.seek(0)
         return send_file(strIO, attachment_filename="testing.json", as_attachment=True)
 
-def serve_image(img):
-    img_io = StringIO()
-    img.save(img_io, 'PNG', quality=70)
-    img_io.seek(0)
-    return send_file(img_io, mimetype='image/png')
+class home(Resource):
+    def get(self):
+        return 'This is Smelter'
 
+api.add_resource(home, '/smelt')
 api.add_resource(step, '/smelt/step')
 
 
