@@ -13,6 +13,7 @@ import os
 import os.path
 import sys
 from io import BytesIO
+import tempfile
 
 from OCC.STEPControl import STEPControl_Reader
 from OCC.IFSelect import IFSelect_RetDone, IFSelect_ItemsByEntity
@@ -84,8 +85,10 @@ class step(Resource):
         if file:
             # file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             print(file.name)
-            jsonStr = import_as_one_shape(file.name)
-            return 'jsonStr'
+            with tempfile.NamedTemporaryFile() as temp:
+                temp.write(file.read())
+                jsonStr = import_as_one_shape(temp.name)
+            return jsonStr
 
 class home(Resource):
     def get(self):
