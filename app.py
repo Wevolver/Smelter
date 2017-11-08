@@ -65,12 +65,6 @@ api = Api(app)
 CORS(app)
 
 class step(Resource):
-    def get(self):
-        strIO = BytesIO()
-        jsonStr = import_as_one_shape()
-        strIO.write(jsonStr.encode())
-        strIO.seek(0)
-        return send_file(strIO, attachment_filename="testing.json", as_attachment=True)
 
     def post(self):
         print(request.files)
@@ -83,7 +77,6 @@ class step(Resource):
         if file.filename == '':
             return 'No selected file'
         if file:
-            # file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             print(file.name)
             with tempfile.NamedTemporaryFile() as temp:
                 temp.write(file.read())
