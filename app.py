@@ -71,6 +71,9 @@ class step(Resource):
         strIO.seek(0)
         return send_file(strIO, attachment_filename="testing.json", as_attachment=True)
 
+    def post(self):
+        return 'You posted'
+
 class home(Resource):
     def get(self):
         return 'This is Smelter'
