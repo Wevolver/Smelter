@@ -81,8 +81,7 @@ class step(Resource):
         # submit a empty part without filename
         if file.filename == '':
             return 'No selected file'
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
+        if file:
             # file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             print(file)
             return 'You posted a file'
