@@ -41,8 +41,7 @@ def read_step_file(filename):
     return aResShape
 
 def import_as_one_shape(file):
-    # shp = read_step_file(os.path.join('.', 'LampExample.step'))
-    shp = file
+    shp = read_step_file(file.filename)
     tess = Tesselator(shp)
     tess.Compute()
     threejsString = tess.ExportShapeToThreejsJSONString('someid')
