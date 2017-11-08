@@ -41,7 +41,7 @@ def read_step_file(filename):
     return aResShape
 
 def import_as_one_shape(file):
-    shp = read_step_file(file.filename)
+    shp = read_step_file(os.path.join('.', 'LampExample.step'))
     tess = Tesselator(shp)
     tess.Compute()
     threejsString = tess.ExportShapeToThreejsJSONString('someid')
@@ -83,7 +83,8 @@ class step(Resource):
             return 'No selected file'
         if file:
             # file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            jsonStr = import_as_one_shape(file)
+            print(file.read())
+            # jsonStr = import_as_one_shape(file)
             return jsonStr
 
 class home(Resource):
