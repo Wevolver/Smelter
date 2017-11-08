@@ -72,7 +72,20 @@ class step(Resource):
         return send_file(strIO, attachment_filename="testing.json", as_attachment=True)
 
     def post(self):
-        return 'You posted'
+        if request.method == 'POST':
+        # check if the post request has the file part
+        if 'file' not in request.files:
+            return 'No file part'
+        file = request.files['file']
+        # if user does not select file, browser also
+        # submit a empty part without filename
+        if file.filename == '':
+            return 'No selected file'
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            # file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            print(file)
+            return 'You posted a file'
 
 class home(Resource):
     def get(self):
