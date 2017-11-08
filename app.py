@@ -83,9 +83,9 @@ class step(Resource):
             return 'No selected file'
         if file:
             # file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            print(file.read())
+            print(file.name)
             # jsonStr = import_as_one_shape(file)
-            return jsonStr
+            return 'jsonStr'
 
 class home(Resource):
     def get(self):
