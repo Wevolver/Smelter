@@ -72,7 +72,6 @@ class step(Resource):
         return send_file(strIO, attachment_filename="testing.json", as_attachment=True)
 
     def post(self):
-        if request.method == 'POST':
         # check if the post request has the file part
         if 'file' not in request.files:
             return 'No file part'
