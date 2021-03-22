@@ -12,7 +12,7 @@ Flask-RESTful==0.3.6
 image==1.5.16
 itsdangerous==0.24
 Jinja2==2.9.6
-lxml==4.1.0
+lxml==4.6.3
 MarkupSafe==1.0
 olefile==0.44
 path.py==10.5
