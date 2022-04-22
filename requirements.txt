@@ -18,7 +18,7 @@ olefile==0.44
 path.py==10.5
 Pillow==4.3.0
 pyeagle==0.1.1
-PyPDF2==1.26.0
+PyPDF2==1.27.5
 python-dateutil==2.6.1
 pytz==2017.3
 PyVirtualDisplay==0.2.1
