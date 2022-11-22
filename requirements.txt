@@ -16,7 +16,7 @@ lxml==4.1.0
 MarkupSafe==1.0
 olefile==0.44
 path.py==10.5
-Pillow==4.3.0
+Pillow==9.3.0
 pyeagle==0.1.1
 PyPDF2==1.26.0
 python-dateutil==2.6.1
